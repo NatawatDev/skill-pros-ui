@@ -1,0 +1,23 @@
+.slide-fast-enter-active,
+.slide-fast-leave-active {
+  transition: all 200ms ease;
+  position: relative;
+  width: 100%;
+}
+
+.slide-fast-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+.slide-fast-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-fast-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+.slide-fast-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
