@@ -4,7 +4,9 @@ export interface IProfileData {
   lastname: string,
   email: string,
   phone: string,
-  createsAt: Date
+  createsAt: string,
+  status: string,
+  role: string
 }
 
 export interface IResponseProfile {
