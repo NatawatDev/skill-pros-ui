@@ -52,7 +52,7 @@ import type { LoginResponse } from './interfaces'
 
 const password = ref<string>('')
 const email = ref<string>('')
-const isLoading = ref<boolean>(false)
+const isLoading = ref<boolean>(false) 
 
 const { validate } = useForm()
 const router = useRouter()
@@ -92,7 +92,7 @@ async function onSubmit() {
       useCookie('refresh').value = refreshToken
     }
 
-    router.push('/')
+    router.push('/admin')
   } catch (err: any) {
     toast.error(err?.data?.message || err?.message)
   } finally {

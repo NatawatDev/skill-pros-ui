@@ -1,9 +1,13 @@
 @import "tailwindcss";
+@import "~/assets/css/transition.css";
 
 @theme {
   --color-primary: #3056D3;
   --color-secondary: #64748B; 
-
+  --color-main-text: #212B36;
+  --color-sub-text: #DEE4EE;
+  --color-sub-header: #8A99AF;
+  --color-placeholder: #64748B;
   --color-disabled: #9ca3af;
   --color-disabled-text: #6b7280;
 }

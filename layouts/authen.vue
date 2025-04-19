@@ -15,8 +15,10 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-center h-full">
-      <NuxtPage />
+    <div class="flex items-center justify-center h-full relative overflow-hidden">
+      <Transition name="slide-fast" mode="out-in">
+        <NuxtPage />
+      </Transition>      
     </div>
   </div>
 </template>

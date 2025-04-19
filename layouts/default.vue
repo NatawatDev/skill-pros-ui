@@ -1,5 +1,18 @@
+
 <template>
-  <div class="min-h-screen bg-gray-100 text-gray-900">
-    <NuxtPage />
+  <div class="flex min-h-screen bg-gray-50">
+    <Sidebar />
+    <div class="flex-1 flex flex-col">
+      <Navbar />
+      <main class="flex-1 p-6">
+        <NuxtPage />
+      </main>
+    </div>
   </div>
 </template>
+
+
+<script setup>
+import Sidebar from '~/components/layout/Sidebar.vue';
+import Navbar from '~/components/layout/Navbar.vue'
+</script>
