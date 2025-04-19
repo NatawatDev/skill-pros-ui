@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-[280px] bg-[#1E293B] text-white p-6 space-y-2">
+  <aside class="w-[300px] bg-[#1E293B] text-white p-6 space-y-2">
     <div class="text-[28px] font-semi-bold flex items-center justify-center gap-2 mb-6">
       <NuxtImg src="/images/admin-icon.svg" width="28" />
       <span>Skill Pros</span>

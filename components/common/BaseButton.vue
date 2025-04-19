@@ -7,8 +7,8 @@
 
       // variant styles
       variant === 'primary'
-        ? 'bg-primary text-white hover:bg-blue-700 focus:ring-blue-500 w-full'
-        : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400 w-full',
+        ? 'bg-primary text-white hover:bg-blue-700 focus:ring-blue-500'
+        : 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-400',
 
       props.class
     ]"

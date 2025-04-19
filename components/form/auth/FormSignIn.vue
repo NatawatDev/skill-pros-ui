@@ -37,6 +37,7 @@
       <BaseButton
         variant="primary"
         :isLoading="isLoading"
+        class="w-full"
         type="submit"        
       >
         Sign in
@@ -48,7 +49,7 @@
 <script setup lang="ts">
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
-import type { LoginResponse } from './interfaces'
+import type { ILoginResponse } from '~/types/form'
 
 const password = ref<string>('')
 const email = ref<string>('')
@@ -72,7 +73,7 @@ async function onSubmit() {
   }
 
   try {
-    const { data, error } = await useFetch<LoginResponse>(`${baseURL}/auth/login`, {
+    const { data, error } = await useFetch<ILoginResponse>(`${baseURL}/auth/login`, {
       method: 'POST',
       body: payload
     })

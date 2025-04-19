@@ -25,6 +25,7 @@
       <BaseButton
         variant="primary"
         :isLoading="isLoading"
+        class="w-full"
         type="submit"        
       >
         Send reset password Instructions
@@ -47,7 +48,7 @@
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
 import { Icon } from '@iconify/vue'
-import type { ResetPasswordResponse } from './interfaces'
+import type { IResponse } from '~/types/form'
 
 const router = useRouter()
 const route = useRoute()
@@ -114,7 +115,7 @@ async function onSubmit() {
   }
 
   try {
-    const { data, error } = await useFetch<ResetPasswordResponse>(`${baseURL}/admins/reset-password`, {
+    const { data, error } = await useFetch<IResponse>(`${baseURL}/admins/reset-password`, {
       method: 'POST',
       body: payload
     })

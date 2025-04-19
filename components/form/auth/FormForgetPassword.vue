@@ -16,6 +16,7 @@
       <BaseButton
         variant="primary"
         :isLoading="isLoading"
+        class="w-full"
         type="submit"        
       >
         Send reset password Instructions
@@ -38,7 +39,7 @@
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
 import { Icon } from '@iconify/vue'
-import type { ForgetPasswordResponse } from './interfaces'
+import type { IResponse } from '~/types/form'
 
 const email = ref<string>('')
 const isLoading = ref<boolean>(false)
@@ -59,7 +60,7 @@ async function onSubmit() {
   }
 
   try {
-    const { data, error } = await useFetch<ForgetPasswordResponse>(`${baseURL}/admins/forget-password`, {
+    const { data, error } = await useFetch<IResponse>(`${baseURL}/admins/forget-password`, {
       method: 'POST',
       body: payload
     })

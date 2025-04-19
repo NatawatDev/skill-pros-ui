@@ -2,9 +2,9 @@
 <template>
   <div class="flex min-h-screen bg-gray-50">
     <Sidebar />
-    <div class="flex-1 flex flex-col">
+    <div class="w-full flex flex-col">
       <Navbar />
-      <main class="flex-1 p-6">
+      <main class="w-full p-6">
         <NuxtPage />
       </main>
     </div>
