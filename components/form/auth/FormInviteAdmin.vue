@@ -14,38 +14,38 @@
           validate="required|email"        
         />
 
-      <BaseInput
-        name="phone"
-        v-model="inviteData.phone"
-        :disabled="isLoading"
-        label="Phone Number"
-        type="text"
-        placeholder="Enter your phone number"
-        icon="mdi:phone-outline"
-        validate="required"        
-      />
+        <BaseInput
+          name="phone"
+          v-model="inviteData.phone"
+          :disabled="isLoading"
+          label="Phone Number"
+          type="text"
+          placeholder="Enter your phone number"
+          icon="mdi:phone-outline"
+          validate="required"        
+        />
 
-      <BaseInput
-        name="firstname"
-        v-model="inviteData.firstname"
-        :disabled="isLoading"
-        label="Firstname"
-        type="text"
-        placeholder="Enter your firstname"
-        icon="mdi:card-account-details-outline"
-        validate="required"        
-      />
+        <BaseInput
+          name="firstname"
+          v-model="inviteData.firstname"
+          :disabled="isLoading"
+          label="Firstname"
+          type="text"
+          placeholder="Enter your firstname"
+          icon="mdi:card-account-details-outline"
+          validate="required"        
+        />
 
-      <BaseInput
-        name="lastname"
-        v-model="inviteData.lastname"
-        :disabled="isLoading"
-        label="Lastname"
-        type="text"
-        placeholder="Enter your lastname"
-        icon="mdi:card-account-details-outline"
-        validate="required"        
-      />
+        <BaseInput
+          name="lastname"
+          v-model="inviteData.lastname"
+          :disabled="isLoading"
+          label="Lastname"
+          type="text"
+          placeholder="Enter your lastname"
+          icon="mdi:card-account-details-outline"
+          validate="required"        
+        />
       </div>
             
       <div class="flex justify-end">
@@ -65,17 +65,9 @@
 <script setup lang="ts">
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
-import type { IResponse } from '~/types/form'
+import { useAdminApi } from '~/utils/api/admin'
 
-interface IInviteData {
-  email: string,
-  phone: string,
-  firstname: string,
-  lastname: string
-}
-
-
-const inviteData = ref<IInviteData>({
+const inviteData = reactive({
   email: '',
   phone: '',
   firstname: '',
@@ -84,11 +76,11 @@ const inviteData = ref<IInviteData>({
 
 const isLoading = ref<boolean>(false)
 
+const router = useRouter()
+
 const { validate } = useForm()
 
-const token = useCookie('token')
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
+const { inviteAdmin } = useAdminApi()
 
 async function onSubmit() {
   const { valid } = await validate()
@@ -97,21 +89,10 @@ async function onSubmit() {
   isLoading.value = true
 
   try {
-    const { data, error } = await useFetch<IResponse>(`${baseURL}/admins/invite`, {
-      method: 'POST',
-      body: inviteData.value,
-      headers: {
-        Authorization: `Bearer ${token.value}`
-      }
-    })
+    const res = await inviteAdmin(inviteData)
 
-    if (error.value) {
-      throw error.value
-    }
-
-    const message = data.value?.message
-    toast.success(message)
-
+    toast.success(res.message)
+    router.push('/')
   } catch (err: any) {
     toast.error(err?.data?.message || err?.message)
   } finally {

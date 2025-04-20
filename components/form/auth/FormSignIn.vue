@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
-import type { ILoginResponse } from '~/types/form'
+import { useAuthApi } from '~/utils/api/auth'
 
 const password = ref<string>('')
 const email = ref<string>('')
@@ -58,8 +58,7 @@ const isLoading = ref<boolean>(false)
 const { validate } = useForm()
 const router = useRouter()
 
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
+const { signinAdmin } = useAuthApi()
 
 async function onSubmit() {
   const { valid } = await validate()
@@ -67,26 +66,19 @@ async function onSubmit() {
 
   isLoading.value = true
 
-  const payload = {
-    email: email.value,
-    password: password.value
-  }
-
-  try {
-    const { data, error } = await useFetch<ILoginResponse>(`${baseURL}/auth/login`, {
-      method: 'POST',
-      body: payload
-    })
-
-    if (error.value) {
-      throw error.value
+  try {    
+    const payload = {
+      email: email.value,
+      password: password.value
     }
 
-    const message = data.value?.message
+    const res = await signinAdmin(payload)
+
+    const message = res.message
     toast.success(message)
 
-    const accessToken = data.value?.data?.accessToken
-    const refreshToken = data.value?.data?.refreshToken
+    const accessToken = res.data.accessToken
+    const refreshToken = res.data.refreshToken
 
     if (accessToken) {
       useCookie('token').value = accessToken

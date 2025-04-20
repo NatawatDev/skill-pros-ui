@@ -12,12 +12,13 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="min-h-[300px]">
         <!-- Loading -->
         <tr v-if="isLoading">
-          <td :colspan="columnList.length" class="text-center py-6 text-gray-500">
-            <Icon icon="mdi:loading" class="animate-spin inline-block text-lg text-primary" />
-            <span class="ml-2">Loading...</span>
+          <td :colspan="columnList.length" class="py-8">
+            <div class="flex justify-center items-center h-full min-h-[64px]">
+              <Icon icon="mdi:loading" class="text-2xl text-primary animate-spin" />
+            </div>
           </td>
         </tr>
 

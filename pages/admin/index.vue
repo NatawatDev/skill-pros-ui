@@ -25,12 +25,16 @@
 
     <!-- Table & Pagination -->
     <div class="w-full">
-      <BaseTable :columnList="columnList" :dataList="adminList" />
+      <BaseTable 
+        :columnList="columnList" 
+        :dataList="adminList"
+        :isLoading="isLoading" 
+      />
 
       <BasePagination
         v-if="paginationMeta.totalPages > 1"
         :currentPage="paginationMeta.currentPage"
-        :totalPages="paginationMeta.totalPages"
+        :totalPages="paginationMeta.totalPages"        
         @update:page="onChangePage"
       />
     </div>
@@ -41,20 +45,20 @@
 import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue3-toastify'
 import { useAppStore } from '~/stores/app'
-import type { IAdmin, IAdminListResponse, IPaginationMeta } from '~/types/admin'
+import type { IAdmin, IPaginationMeta } from '~/types/admin'
 import type { IColumn } from '~/types/base'
+import { useAdminApi } from '~/utils/api/admin'
 
 definePageMeta({ title: 'Admin Management' })
 
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
-
-const token = useCookie('token')
 const router = useRouter()
 const appStore = useAppStore()
 
+const { getAdminList } = useAdminApi()
+
 const searchText = ref<string>('')
 const adminList = ref<IAdmin[]>([])
+const isLoading = ref<boolean>(false)
 
 const paginationMeta = ref<IPaginationMeta>({
   totalItems: 0,
@@ -87,29 +91,22 @@ const searchAdmin = useDebounceFn((value: string) => {
   fetchAdminList(value)
 }, 300)
 
-async function fetchAdminList(search: string = '') {
+async function fetchAdminList(searchText: string = '') {
   try {
-    const { data, error } = await useFetch<IAdminListResponse>(`${baseURL}/admins`, {
-      method: 'GET',
-      query: {
-        searchText: search,
-        page: paginationMeta.value.currentPage,
-        limitPerPage: paginationMeta.value.itemsPerPage
-      },
-      headers: {
-        Authorization: `Bearer ${token.value}`
-      }
+    isLoading.value = true
+    const res = await getAdminList({
+      page: paginationMeta.value.currentPage,
+      limitPerPage: paginationMeta.value.itemsPerPage,
+      searchText: searchText
     })
 
-    if (error.value) throw error.value
-
-    if (data.value?.data) {
-      adminList.value = data.value.data
-      paginationMeta.value = data.value.meta
-    }
-
+    adminList.value = res.data
+    paginationMeta.value = res.meta
+    
   } catch (err: any) {
     toast.error(err?.data?.message || err?.message || 'Failed to fetch admins')
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
