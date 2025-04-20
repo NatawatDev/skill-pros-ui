@@ -96,7 +96,7 @@ async function fetchAdminList(searchText: string = '') {
     isLoading.value = true
     const res = await getAdminList({
       page: paginationMeta.value.currentPage,
-      limitPerPage: paginationMeta.value.itemsPerPage,
+      limitPerPage: 5,
       searchText: searchText
     })
 
