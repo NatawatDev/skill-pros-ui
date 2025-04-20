@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import FormResetPassword from '~/components/form/auth/FormResetPassoword.vue'
+import FormResetPassword from '~/components/form/auth/FormResetPassword.vue'
 
 definePageMeta({
   layout: 'authen'

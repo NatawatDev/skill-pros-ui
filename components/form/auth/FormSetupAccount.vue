@@ -48,7 +48,7 @@
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
 import { Icon } from '@iconify/vue'
-import type { IResponse } from '~/types/form'
+import { useAdminApi } from '~/utils/api/admin'
 
 const router = useRouter()
 const route = useRoute()
@@ -60,8 +60,7 @@ const isLoading = ref<boolean>(false)
 
 const { validate } = useForm()
 
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
+const { verifyTokenAdmin, setupPasswordAdmin } = useAdminApi()
 
 onMounted(() => {
   verifyToken()
@@ -73,23 +72,16 @@ async function verifyToken() {
 
   isLoading.value = true
 
-  const payload = {
-    token: token,
-    type: 'invite'
-  }
-
   try {
-    const { data, error } = await useFetch(`${baseURL}/admins/verify-token`, {
-      method: 'POST',
-      body: payload
-    })
-
-    if (error.value) {
-      throw error.value
+    const payload = {
+      token: token,
+      type: 'reset'
     }
 
+    await verifyTokenAdmin(payload)
+
   } catch (err: any) {
-    toast.error(err?.data?.message || err?.message)
+    toast.error(err.message)
     setTimeout(() => {
       router.push('/signin')
     }, 1000)
@@ -100,6 +92,7 @@ async function verifyToken() {
 
 async function onSubmit() {
   const { valid } = await validate()
+
   if (!valid) return
 
   if (password.value !== confirmPassword.value) {
@@ -115,17 +108,9 @@ async function onSubmit() {
   }
 
   try {
-    const { data, error } = await useFetch<IResponse>(`${baseURL}/admins/setup-password`, {
-      method: 'POST',
-      body: payload
-    })
+    const res = await setupPasswordAdmin(payload)
 
-    if (error.value) {
-      throw error.value
-    }
-
-    const message = data.value?.message
-    toast.success(message)
+    toast.success(res.message)
 
     router.push('./')
 

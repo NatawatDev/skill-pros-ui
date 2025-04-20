@@ -32,15 +32,14 @@
 import { useAppStore } from '~/stores/app'
 import { Icon } from '@iconify/vue'
 import { useRouter } from 'vue-router'
-
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
-const token = useCookie('token')
+import { useAuthApi } from '~/utils/api/auth'
 
 const appStore = useAppStore()
 const router = useRouter()
 
 const isOpen = ref(false)
+
+const { logoutAdmin } = useAuthApi()
 
 const fullname = computed(() =>
 appStore.profile ? `${appStore.profile.firstname} ${appStore.profile.lastname}` : ''
@@ -52,14 +51,9 @@ function toggleDropdown() {
 
 async function logout() {
   try {
-    const { data } = await useFetch(`${baseURL}/auth/logout`, {
-      method: 'post',
-      headers: {
-        Authorization: `Bearer ${token.value}`
-      }
-    })
+    const res = await logoutAdmin()
 
-    if (data.value) {
+    if (res) {
       useCookie('token').value = null
       useCookie('refresh').value = null
       appStore.setProfile(null)

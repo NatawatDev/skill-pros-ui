@@ -1,13 +1,11 @@
 import { useAppStore } from "~/stores/app"
-import type { IResponseProfile } from "~/types/app"
-import type { ILoginResponse } from "~/types/form"
+import { useAdminApi } from "~/utils/api/admin"
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  const config = useRuntimeConfig()
-  const baseURL = config.public.API_ENDPOINT
   const token = useCookie('token')
-  const refreshToken = useCookie('refresh')
   const appStore = useAppStore()
+
+  const { profileAdmin } = useAdminApi()
 
   const publicPages = ['/signin', '/forgot-password', '/reset-password', '/setup-password']
 
@@ -19,44 +17,16 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (token.value && !appStore.profile) {
-    const fetchProfile = async () => {
-      const res = await $fetch<IResponseProfile>(`${baseURL}/admins/profile`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token.value}`
-        }
-      })
-      return res.data
-    }
-
     try {
-      const profile = await fetchProfile()
-      if (profile) {
-        appStore.setProfile(profile)
+      const res = await profileAdmin()
+      
+      if (res.data) {
+        appStore.setProfile(res.data)
       }
+
     } catch (err: any) {
-
-      if (refreshToken.value) {
-        try {
-          const res = await $fetch<ILoginResponse>(`${baseURL}/auth/refresh-token`, {
-            method: 'POST',
-            body: { refreshToken: refreshToken.value },
-          })
-
-          token.value = res.data.accessToken
-          const newProfile = await fetchProfile()
-          if (newProfile) {
-            appStore.setProfile(newProfile)
-          }
-        } catch (refreshError) {
-          token.value = null
-          refreshToken.value = null
-          return navigateTo('/signin')
-        }
-      } else {
-        token.value = null
-        return navigateTo('/signin')
-      }
+      token.value = null
+      return navigateTo('/signin')
     }
   }
 })

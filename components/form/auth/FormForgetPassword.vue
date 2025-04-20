@@ -39,15 +39,14 @@
 import { Form, useForm } from 'vee-validate'
 import { toast } from 'vue3-toastify'
 import { Icon } from '@iconify/vue'
-import type { IResponse } from '~/types/form'
+import { useAdminApi } from '~/utils/api/admin'
 
 const email = ref<string>('')
 const isLoading = ref<boolean>(false)
 
 const { validate } = useForm()
 
-const config = useRuntimeConfig()
-const baseURL = config.public.API_ENDPOINT
+const { forgetPasswordAdmin } = useAdminApi()
 
 async function onSubmit() {
   const { valid } = await validate()
@@ -55,22 +54,10 @@ async function onSubmit() {
 
   isLoading.value = true
 
-  const payload = {
-    email: email.value,
-  }
-
   try {
-    const { data, error } = await useFetch<IResponse>(`${baseURL}/admins/forget-password`, {
-      method: 'POST',
-      body: payload
-    })
+    const res = await forgetPasswordAdmin({ email: email.value })
 
-    if (error.value) {
-      throw error.value
-    }
-
-    const message = data.value?.message
-    toast.success(message)
+    toast.success(res.message)
 
   } catch (err: any) {
     toast.error(err?.data?.message || err?.message)
