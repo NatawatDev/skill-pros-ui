@@ -75,7 +75,7 @@ async function verifyToken() {
   try {
     const payload = {
       token: token,
-      type: 'reset'
+      type: 'invite'
     }
 
     await verifyTokenAdmin(payload)
