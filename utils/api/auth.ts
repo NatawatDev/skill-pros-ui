@@ -7,6 +7,7 @@ export const useAuthApi = () => {
   const api = useApi()
 
   const signinAdmin = (payload: ISigninAdminPayload) => {
+    console.log('test reset')
     return api<ILoginResponse>('/auth/login', {
       method: 'POST',
       body: payload
